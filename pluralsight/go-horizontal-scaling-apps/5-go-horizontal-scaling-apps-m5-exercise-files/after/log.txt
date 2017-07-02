@@ -1,0 +1,4 @@
+2016-05-28 22:30:58;INFO;app server;Registering with load balancer
+2016-05-28 22:30:59;INFO;load balancer;Registering application server with address: 172.18.0.11:3000
+2016-05-28 22:31:20;INFO;app server;Unregistering with load balancer
+2016-05-28 22:31:20;INFO;load balancer;Unregistering application server with address: 172.18.0.11:3000

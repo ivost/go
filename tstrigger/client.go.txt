@@ -1,0 +1,608 @@
+//// Copyright(C) 2015 Verizon, Inc. All rights reserved.
+//package main
+//
+//import (
+//	"bytes"
+//	"crypto/rand"
+//	"encoding/base64"
+//	"encoding/json"
+//	"io"
+//	"io/ioutil"
+//	"math/big"
+//	"net"
+//	"net/http"
+//	"net/url"
+//	"os"
+//	"strings"
+//
+//	"github.com/facebookgo/httpcontrol"
+//
+//	"time"
+//
+//	"log"
+//)
+//
+//var (
+//	defaultComponentTransport = &httpcontrol.Transport{
+//		MaxIdleConnsPerHost: 5000,
+//		RequestTimeout:      time.Minute,
+//		MaxTries:            3,
+//		// WARNING: setting this value to true invalidates
+//		//          the above MaxIdleConnsPerHost setting
+//		DisableKeepAlives: false,
+//	}
+//)
+//
+//type clientFactory struct{}
+//
+//var (
+//	ClientFactory clientFactory
+//)
+//
+//func (self clientFactory) New(hostAndPort, basePath, resourceName string) Consumer {
+//	return new(Client).init(hostAndPort, basePath, resourceName)
+//}
+//
+//// Client
+//type Client struct {
+//	HostAndPort  string
+//	BasePath     string
+//	ResourceName string
+//	BaseUrl      string
+//	fullUrl      string
+//	Token        string
+//}
+//
+//// Client Init
+//func (this *Client) init(hostAndPort, basePath, resourceName string) Consumer {
+//	this.HostAndPort = hostAndPort                   // in the form, "scheme://domain:port"
+//	this.BasePath = basePath                         // in the form, "/b/vn"
+//	this.BaseUrl = hostAndPort + basePath            // in the form, "scheme://domain:port/b/vn"
+//	this.ResourceName = resourceName                 // in the plural form, "rn"
+//	this.fullUrl = this.BaseUrl + "/" + resourceName // in the form, "scheme://domain:port/b/vn/rn"
+//	this.Token = ""
+//	return this
+//}
+//
+//// Get Full URL
+//func (this *Client) FullUrl() string {
+//	hostAndPort := this.HostAndPort
+//
+//	// check if host-and-port is set
+//	if hostAndPort == "" {
+//		log.Fatalf("Client.FullUrl: host and port empty")
+//		return this.fullUrl
+//	}
+//
+//	// check if host is implicit
+//	if hostAndPort[0] == ':' {
+//		host := os.Getenv("HOST")
+//		if host == "" {
+//			log.Print("Client.FullUrl: HOST env variable not set for port-only formatted host and port")
+//			return this.fullUrl
+//		}
+//		hostAndPort = "http://" + host + hostAndPort
+//	}
+//
+//	// convert host and port is a url
+//	u, err := url.Parse(hostAndPort)
+//	if err != nil {
+//		log.Printf("Client.FullUrl: parse of url failed, %v", err)
+//		return this.fullUrl
+//	}
+//
+//	// split url into separate host and port
+//	host, port, err := net.SplitHostPort(u.Host)
+//	if err != nil {
+//		log.Fatalf("Client.FullUrl: split host and port failed on %v, %v", u.Host, err)
+//		return this.fullUrl
+//	}
+//
+//	// attempt to lookup all IPs for the given host
+//	ips, err := net.LookupIP(host)
+//	if err != nil {
+//		log.Fatalf("Client.FullUrl: failed lookup, %v", err)
+//		return this.fullUrl
+//	}
+//	if len(ips) == 0 {
+//		log.Fatalf("Client.FullUrl: did not find IP for, %v", host)
+//		return this.fullUrl
+//	}
+//
+//	// select one of the IPs randomly
+//	length := int64(len(ips))
+//	index, err := rand.Int(rand.Reader, big.NewInt(length))
+//	if err != nil {
+//		log.Fatalf("Client.FullUrl: random number generator failed, %v", err)
+//	}
+//
+//	if ips[index.Int64()].To4() == nil {
+//		hostAndPort = u.Scheme + "://[" + ips[index.Int64()].String() + "]:" + port
+//	} else {
+//		// build final url
+//		// See defect NPDTHING-1360 for an explanation.  But basically, GO doesn't
+//		// like more than one ':' in the host name, so it expects brackets around it.
+//		hostAndPort = u.Scheme + "://" + ips[index.Int64()].String() + ":" + port
+//	}
+//	baseUrl := hostAndPort + this.BasePath
+//	fullUrl := baseUrl + "/" + this.ResourceName
+//
+//	return fullUrl
+//}
+//
+//// Add Access Token
+//// TODO - Add access token to bearer.
+//func (this *Client) AccessToken(token string) Consumer {
+//	xtoken := strings.TrimPrefix(token, "Bearer")
+//	xtoken = strings.TrimSpace(xtoken)
+//	return &Client{
+//		this.HostAndPort,
+//		this.BasePath,
+//		this.ResourceName,
+//		this.BaseUrl,
+//		this.fullUrl,
+//		xtoken,
+//	}
+//}
+//
+//// List all resource instances by page, according to the given filter options
+//// { page } GET /base/resourceName { filter }
+//func (this *Client) List(filter *rest.Filter) ([]byte, *rest.Page, *Error) {
+//	log.Debug("Client.List(%v)", this.ResourceName)
+//
+//	// marshal filter
+//	var buffer io.Reader = nil
+//	if filter != nil {
+//		body, goerr := json.Marshal(filter)
+//		if goerr != nil {
+//			return nil, nil, ErrorBadRequest.Clone("%v", goerr)
+//		}
+//		buffer = bytes.NewBuffer(body)
+//	}
+//
+//	// build request
+//	request, goerr := http.NewRequest("GET", this.FullUrl(), buffer)
+//	if goerr != nil {
+//		return nil, nil, ErrorInternalServer.Clone("%v", goerr)
+//	}
+//	request.Header.Set("Content-Type", "application/json")
+//
+//	// perform request
+//	content, header, err := this.DoWithHeaders(request)
+//	if err != nil {
+//		return nil, nil, err
+//	}
+//
+//	// Get the next/prev page information from the header, if exists.
+//	page := this.getPage(header)
+//
+//	return content, page, nil
+//}
+//
+//// Create a single resource instance or a batch, return the resulting instances
+//// { page } POST /base/resourceName [ { resource }, ... ]
+//func (this *Client) Create(resource interface{}) ([]byte, *Error) {
+//	log.Debug("Client.Create(%v)", this.ResourceName)
+//
+//	// marshal resource
+//	var buffer io.Reader = nil
+//	if resource != nil {
+//		body, goerr := json.Marshal(resource)
+//		if goerr != nil {
+//			return nil, ErrorBadRequest.Clone("%v", goerr)
+//		}
+//		buffer = bytes.NewBuffer(body)
+//	} else {
+//		return nil, ErrorPartialContent.Clone("missing required resource")
+//	}
+//
+//	// build request
+//	request, goerr := http.NewRequest("POST", this.FullUrl(), buffer)
+//	if goerr != nil {
+//		return nil, ErrorInternalServer.Clone("%v", goerr)
+//	}
+//	request.Header.Set("Content-Type", "application/json")
+//
+//	// perform request
+//	content, err := this.Do(request)
+//	if err != nil {
+//		return nil, err
+//	}
+//
+//	// return response
+//	return content, nil
+//}
+//
+//// Query the resource instance
+//// { resource, page } GET /base/resourceName/id { filter }
+//func (this *Client) Query(id string, filter *rest.Filter) ([]byte, *Error) {
+//	log.Debug("Client.Query(%v)", this.ResourceName)
+//
+//	// marshal filter
+//	var buffer io.Reader = nil
+//	if filter != nil {
+//		body, goerr := json.Marshal(filter)
+//		if goerr != nil {
+//			return nil, ErrorBadRequest.Clone("%v", goerr)
+//		}
+//		buffer = bytes.NewBuffer(body)
+//	}
+//
+//	// build request
+//	fullUrl := this.FullUrl() + "/" + id
+//	request, goerr := http.NewRequest("GET", fullUrl, buffer)
+//	if goerr != nil {
+//		return nil, ErrorInternalServer.Clone("%v", goerr)
+//	}
+//	request.Header.Set("Content-Type", "application/json")
+//
+//	// perform request
+//	content, err := this.Do(request)
+//	if err != nil {
+//		return nil, err
+//	}
+//
+//	// return response
+//	return content, nil
+//}
+//
+//// Overwrite the resource instance with the one given
+//// { resource } PUT /base/resourceName/id { resource }
+//func (this *Client) Overwrite(id string, resource interface{}) ([]byte, *Error) {
+//	log.Debug("Client.Overwrite(%v)", this.ResourceName)
+//
+//	// marshal resource
+//	var buffer io.Reader = nil
+//	if resource != nil {
+//		body, goerr := json.Marshal(resource)
+//		if goerr != nil {
+//			return nil, ErrorBadRequest.Clone("%v", goerr)
+//		}
+//		buffer = bytes.NewBuffer(body)
+//	} else {
+//		return nil, ErrorPartialContent.Clone("missing required resource")
+//	}
+//
+//	// build request
+//	fullUrl := this.FullUrl() + "/" + id
+//	request, goerr := http.NewRequest("PUT", fullUrl, buffer)
+//	if goerr != nil {
+//		return nil, ErrorInternalServer.Clone("%v", goerr)
+//	}
+//	request.Header.Set("Content-Type", "application/json")
+//
+//	// perform request
+//	content, err := this.Do(request)
+//	if err != nil {
+//		return nil, err
+//	}
+//
+//	// return response
+//	return content, nil
+//}
+//
+//// Patch the resource instance with the one given
+//// { resource } PATCH /base/resourceName/id { resource }
+//func (this *Client) Patch(id string, resource interface{}) ([]byte, *Error) {
+//	log.Debug("Client.Patch(%v)", this.ResourceName)
+//
+//	// marshal resource
+//	var buffer io.Reader = nil
+//	if resource != nil {
+//		body, goerr := json.Marshal(resource)
+//		if goerr != nil {
+//			return nil, ErrorBadRequest.Clone("%v", goerr)
+//		}
+//		buffer = bytes.NewBuffer(body)
+//	} else {
+//		return nil, ErrorPartialContent.Clone("missing required resource")
+//	}
+//
+//	// build request
+//	fullUrl := this.FullUrl() + "/" + id
+//	request, goerr := http.NewRequest("PATCH", fullUrl, buffer)
+//	if goerr != nil {
+//		return nil, ErrorInternalServer.Clone("%v", goerr)
+//	}
+//	request.Header.Set("Content-Type", "application/json")
+//
+//	// perform request
+//	content, err := this.Do(request)
+//	if err != nil {
+//		return nil, err
+//	}
+//
+//	// return response
+//	return content, nil
+//}
+//
+//// Delete the resource instance
+//// { undefined } DELETE /base/resourceName/*id { *filter }
+//func (this *Client) Delete(id string, filter *rest.Filter) *Error {
+//	log.Debug("Client.Delete(%v)", this.ResourceName)
+//
+//	// marshal filter
+//	var buffer io.Reader = nil
+//	if filter != nil {
+//		body, goerr := json.Marshal(filter)
+//		if goerr != nil {
+//			return ErrorBadRequest.Clone("%v", goerr)
+//		}
+//		buffer = bytes.NewBuffer(body)
+//	}
+//
+//	// build request
+//	fullUrl := this.FullUrl()
+//	if id != rest.IdNil {
+//		fullUrl = fullUrl + "/" + id
+//	}
+//	request, goerr := http.NewRequest("DELETE", fullUrl, buffer)
+//	if goerr != nil {
+//		return ErrorInternalServer.Clone("%v", goerr)
+//	}
+//
+//	// perform request
+//	if _, err := this.Do(request); err != nil {
+//		return err
+//	}
+//
+//	// return response
+//	return nil
+//}
+//
+//// Report meta-data of the resource instance
+//// { undefined } HEAD /base/resourceName/id {}
+//func (this *Client) Head(id string) *Error {
+//	log.Debug("Client.Head(%v)", this.ResourceName)
+//
+//	// build request
+//	fullUrl := this.FullUrl() + "/" + id
+//	request, goerr := http.NewRequest("HEAD", fullUrl, nil)
+//	if goerr != nil {
+//		return ErrorInternalServer.Clone("%v", goerr)
+//	}
+//
+//	// perform request
+//	if _, err := this.Do(request); err != nil {
+//		return err
+//	}
+//
+//	// return response
+//	return nil
+//}
+//
+//// Perform the given action on the resource instance
+//// { undefined } POST /base/resourceName/id/actionPath/action { undefined }
+//func (this *Client) ActionByResource(id string, action string, resource interface{}) ([]byte, *Error) {
+//	log.Debug("Client.ActionByResource(%v/%v)", this.ResourceName, action)
+//
+//	// marshal resource
+//	var buffer io.Reader = nil
+//	if resource != nil {
+//		body, goerr := json.Marshal(resource)
+//		if goerr != nil {
+//			return nil, ErrorBadRequest.Clone("%v", goerr)
+//		}
+//		buffer = bytes.NewBuffer(body)
+//	}
+//
+//	// build request
+//	fullUrl := this.FullUrl() + "/" + id + "/actions/" + action
+//	request, goerr := http.NewRequest("POST", fullUrl, buffer)
+//	if goerr != nil {
+//		return nil, ErrorInternalServer.Clone("%v", goerr)
+//	}
+//	request.Header.Set("Content-Type", "application/json")
+//
+//	// perform request
+//	content, err := this.Do(request)
+//	if err != nil {
+//		return nil, err
+//	}
+//
+//	// return response
+//	return content, nil
+//}
+//
+//// Perform the given action on the resource field
+//// { undefined } POST /base/resourceName/id/actions/actionPath { undefined }
+//func (this *Client) ActionByResourceField(id, field string, extension []string, resource interface{}) ([]byte, *Error) {
+//	log.Debug("Client.ActionByResourceField(%v/%v/%v)", this.ResourceName, field, extension)
+//
+//	// marshal resource
+//	var buffer io.Reader = nil
+//	if resource != nil {
+//		body, goerr := json.Marshal(resource)
+//		if goerr != nil {
+//			return nil, ErrorBadRequest.Clone("%v", goerr)
+//		}
+//		buffer = bytes.NewBuffer(body)
+//	}
+//
+//	// build request
+//	actionPath := strings.Join(extension, "/")
+//	fullUrl := this.FullUrl() + "/" + id + "/" + field + "/" + actionPath
+//	request, goerr := http.NewRequest("POST", fullUrl, buffer)
+//	if goerr != nil {
+//		return nil, ErrorInternalServer.Clone("%v", goerr)
+//	}
+//	request.Header.Set("Content-Type", "application/json")
+//
+//	// perform request
+//	content, err := this.Do(request)
+//	if err != nil {
+//		return nil, err
+//	}
+//
+//	// return response
+//	return content, nil
+//}
+//
+//// Perform the given Request
+//func (this *Client) Do(request *http.Request) (body []byte, failure *Error) {
+//
+//	// add token
+//	if this.Token != "" {
+//		request.Header.Set("Authorization", "Bearer "+this.Token)
+//	}
+//
+//	// perform request
+//	localClient := &http.Client{
+//		Transport: defaultComponentTransport,
+//	}
+//	response, err := localClient.Do(request)
+//	if err != nil {
+//		return nil, ErrorBadGateway.Clone(err.Error())
+//	}
+//
+//	// pull response content
+//	if response.Body != nil {
+//		defer response.Body.Close()
+//		if body, err = ioutil.ReadAll(response.Body); err != nil {
+//			return nil, ErrorPartialContent.Clone(err.Error())
+//		}
+//	}
+//
+//	// process error response
+//	if response.StatusCode >= http.StatusBadRequest {
+//
+//		// default error response
+//		failure = ErrorFactory.NewWithTemplate(response.StatusCode, http.StatusText(response.StatusCode), string(body))
+//
+//		// if the unmarshal func panic's, then this defer'd function
+//		// will return the default error response
+//		defer func() {
+//			if r := recover(); r != nil {
+//				body = nil
+//				failure = ErrorInternalServer.Clone("panic occured, %v", r)
+//			}
+//		}()
+//
+//		// attempt to unmarshal into an error resource
+//		if len(body) > 0 {
+//			json.Unmarshal(body, failure)
+//		}
+//
+//		// return error
+//		return nil, failure
+//	}
+//
+//	// return ok
+//	return body, nil
+//}
+//
+//// Perform the given Request, which returns the body and http headers.
+//func (this *Client) DoWithHeaders(request *http.Request) (body []byte, headers http.Header, failure *Error) {
+//
+//	// add token
+//	if this.Token != "" {
+//		request.Header.Set("Authorization", "Bearer "+this.Token)
+//	}
+//
+//	// perform request
+//	localClient := &http.Client{
+//		Transport: defaultComponentTransport,
+//	}
+//	response, err := localClient.Do(request)
+//	if err != nil {
+//		return nil, nil, ErrorBadGateway.Clone(err.Error())
+//	}
+//
+//	// pull response content
+//	if response.Body != nil {
+//		defer response.Body.Close()
+//		if body, err = ioutil.ReadAll(response.Body); err != nil {
+//			return nil, nil, ErrorPartialContent.Clone(err.Error())
+//		}
+//	}
+//
+//	// process error response
+//	if response.StatusCode >= http.StatusBadRequest {
+//
+//		// default error response
+//		failure = ErrorFactory.NewWithTemplate(response.StatusCode, http.StatusText(response.StatusCode), string(body))
+//
+//		// if the unmarshal func panic's, then this defer'd function
+//		// will return the default error response
+//		defer func() {
+//			if r := recover(); r != nil {
+//				body = nil
+//				failure = ErrorInternalServer.Clone("panic occured, %v", r)
+//			}
+//		}()
+//
+//		// attempt to unmarshal into an error resource
+//		if len(body) > 0 {
+//			json.Unmarshal(body, failure)
+//		}
+//
+//		// return error
+//		return nil, nil, failure
+//	}
+//
+//	// return ok
+//	return body, response.Header, nil
+//}
+//
+//// Private method to extract the X-Prev and X-Next values from the http header.  These
+//// are propriety headers used by TS to store 'next page' and 'prev page' values.
+////
+//func (this *Client) getPage(header http.Header) *rest.Page {
+//
+//	prev := header["X-Prev"]
+//	next := header["X-Next"]
+//
+//	p := &rest.Page{}
+//
+//	if len(next) > 0 {
+//		data, goerr := base64.URLEncoding.DecodeString(next[0])
+//		if goerr != nil {
+//			log.Alarm("failed next page base64 Decoding")
+//		} else {
+//			var filter rest.Filter
+//			if goerr := json.Unmarshal(data, &filter); goerr != nil {
+//				log.Alarm("Failed next page marshalling, err: %v", goerr)
+//			} else {
+//				p.Next = &filter
+//			}
+//		}
+//	}
+//
+//	if len(prev) > 0 {
+//		data, goerr := base64.URLEncoding.DecodeString(prev[0])
+//		if goerr != nil {
+//			log.Alarm("failed prev page base64 Decoding")
+//		} else {
+//			var filter rest.Filter
+//			if goerr := json.Unmarshal(data, &filter); goerr != nil {
+//				log.Alarm("Failed prev page marshalling, err: %v", goerr)
+//			} else {
+//				p.Prev = &filter
+//			}
+//		}
+//	}
+//
+//	// If one (or both) of the next or prev filters are set, we know we created a page
+//	// object, so return.
+//	if len(next) != 0 || len(prev) != 0 {
+//		return p
+//	}
+//
+//	// return nil page
+//	return nil
+//}
+
+
+
+	//client = &http.Client{
+	//	Transport: &httpcontrol.Transport{
+	//		RequestTimeout: time.Minute,
+	//		MaxTries: 3,
+	//	},
+	//}
+	////url := "http://10.0.88.88:9200/"
+	//url := "http://ip.jsontest.com/"
+	////{ ip: "2605:e000:1c0d:4045:3959:9de9:9fde:80b1"}
+	//
+	//res, err := client.Get(url)
+	//log.Printf("Result: %s", res)

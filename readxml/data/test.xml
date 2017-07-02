@@ -1,0 +1,12 @@
+<doc>
+    <Person>
+        <FullName>John Doe</FullName>
+        <Company>Acme</Company>
+        <City>San Diego</City>
+    </Person>
+    <Person>
+        <FullName>Jim Smith</FullName>
+        <Company>Verizon</Company>
+        <City>San Diego</City>
+    </Person>
+</doc>
