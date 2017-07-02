@@ -1,0 +1,25 @@
+<component name="libraryTable">
+  <library name="GOPATH &lt;awesomeProject&gt;">
+    <CLASSES>
+      <root url="file://$USER_HOME$/github/go/src/datagen" />
+      <root url="file://$USER_HOME$/github/go/src/tstrigger" />
+      <root url="file://$USER_HOME$/github/go/src/github.com" />
+      <root url="file://$USER_HOME$/github/go/src/readxml" />
+      <root url="file://$USER_HOME$/github/go/src/client" />
+      <root url="file://$USER_HOME$/github/go/src/pluralsight" />
+      <root url="file://$USER_HOME$/github/go/src/rest" />
+    </CLASSES>
+    <SOURCES>
+      <root url="file://$USER_HOME$/github/go/src/datagen" />
+      <root url="file://$USER_HOME$/github/go/src/tstrigger" />
+      <root url="file://$USER_HOME$/github/go/src/github.com" />
+      <root url="file://$USER_HOME$/github/go/src/readxml" />
+      <root url="file://$USER_HOME$/github/go/src/client" />
+      <root url="file://$USER_HOME$/github/go/src/pluralsight" />
+      <root url="file://$USER_HOME$/github/go/src/rest" />
+    </SOURCES>
+    <excluded>
+      <root url="file://$PROJECT_DIR$" />
+    </excluded>
+  </library>
+</component>
