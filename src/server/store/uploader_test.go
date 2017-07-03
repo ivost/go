@@ -23,7 +23,7 @@ func TestSpec(t *testing.T) {
 					So(rec.Lat > 30, ShouldBeTrue)
 					So(rec.Lng < -90, ShouldBeTrue)
 					So(rec.Radius > 0, ShouldBeTrue)
-				}git
+				}
 			} else {
 				t.Fail()
 			}
