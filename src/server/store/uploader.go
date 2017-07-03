@@ -10,7 +10,9 @@ import (
 	// don't use - problem on mac with \r line ending "encoding/csv"
 	// "encoding/csv"
 	"strings"
-	"server/util"
+	"server/model"
+	"strconv"
+	"server/database"
 )
 
 func Upload(w http.ResponseWriter, r *http.Request) {
@@ -41,20 +43,30 @@ func Upload(w http.ResponseWriter, r *http.Request) {
 	Process(filename)
 }
 
-func Process(filename string) {
+func Process(filename string) (err1 error) {
 	log.Printf("process %s", filename)
 
 	// parse
-	r, ok := Parse(filename)
-	log.Printf("%v, ok %v", r, ok)
+	recs, err := Parse(filename)
+	if err != nil {
+		return err
+	}
 	// store to db
+	for _, rec := range recs {
+		err := database.AddPoi(&rec)
+		if err != nil {
+			err1 = err
+			log.Printf("err: %v\n", err)
+		}
+	}
+	return err1
 }
 
-func Parse(filename string) (res []Offer, err error) {
+func Parse(filename string) (res [] model.POI, err error) {
 	// on mac
 	lineEnd := byte('\r')
 
-	res = make([]Offer, 0, 100)
+	res = make([] model.POI, 0, 100)
 	log.Printf("parse %s", filename)
 	file, err := os.Open(filename)
 	if err != nil {
@@ -81,13 +93,13 @@ func Parse(filename string) (res []Offer, err error) {
 			log.Printf("invalid record: %v\n", line)
 			continue
 		}
-		lat := util.ToFloat64(f[6])
-		lon := util.ToFloat64(f[7])
-		radius := util.ToFloat64(f[8])
+		lat := ToFloat64(f[6])
+		lon := ToFloat64(f[7])
+		radius := ToFloat64(f[8])
 
-		rec := Offer{f[0], f[1], f[2], f[3], f[4], f[5],
-					 lat, lon, radius}
-		log.Printf("record: %s - lat: %f, lon: %f", rec.name, rec.latitude, rec.longitude)
+		rec := model.POI{f[0], f[1], f[2], f[3], f[4], f[5],
+				   lat, lon, radius}
+		//log.Printf("record: %s - lat: %f, lon: %f", rec.Name, rec.Lat, rec.Lng)
 		res = append(res, rec)
 	}
 
@@ -95,4 +107,13 @@ func Parse(filename string) (res []Offer, err error) {
 }
 
 
+func ToFloat64(s string) (res float64) {
+	var err error
+	res, err = strconv.ParseFloat(s, 64)
+	if err != nil {
+		log.Printf("Invalid number: %v", s)
+		res = 0.0
+	}
+	return res
+}
 

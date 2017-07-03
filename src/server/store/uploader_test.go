@@ -9,41 +9,45 @@ import (
 
 func TestSpec(t *testing.T) {
 
-	//// Only pass t into top-level Convey calls
-	//Convey("Given some integer with a starting value", t, func() {
-	//	x := 1
-	//
-	//	Convey("When the integer is incremented", func() {
-	//		x++
-	//
-	//		Convey("The value should be greater by one", func() {
-	//			So(x, ShouldEqual, 2)
-	//		})
-	//	})
-	//})
-
 	// Only pass t into top-level Convey calls
-	Convey("Given tsv file parse into 2 dim array", t, func() {
+	Convey("Given tsv file parse and return array of POI", t, func() {
 
-		Convey("pos test", func() {
+		Convey("positive Parse test", func() {
 			filename := "../data/offers_poiA.tsv"
-			if r, err := Parse(filename); err != nil {
-				log.Printf("%v", r)
-				So(len(r), ShouldBeGreaterThan, 0)
+			if recs, err := Parse(filename); err == nil {
+				//log.Printf("%v", recs)
+				So(len(recs), ShouldBeGreaterThan, 0)
+				for _, rec := range recs {
+					log.Printf("%v\n", rec)
+					So(len(rec.Name) > 0, ShouldBeTrue)
+					So(rec.Lat > 30, ShouldBeTrue)
+					So(rec.Lng < -90, ShouldBeTrue)
+					So(rec.Radius > 0, ShouldBeTrue)
+				}git
+			} else {
+				t.Fail()
 			}
 		})
 
-		Convey("neg test", func() {
+		Convey("not found file test", func() {
 			filename := "../data/notfound.tsv"
-			_, err := Parse(filename)
+			recs, err := Parse(filename)
+			log.Printf("%v\n", err)
+			So(len(recs) == 0, ShouldBeTrue)
 			So(err, ShouldNotBeNil)
 		})
 
 	})
 
+	Convey("Given tsv file process it", t, func() {
+
+		Convey("positive Process test", func() {
+			filename := "../data/offers_poiA.tsv"
+			err := Process(filename)
+			So(err, ShouldBeNil)
+		})
+	})
+
+
 }
 
-//func Test_parse(test * testing)  {
-//	r := parse(filename)
-//	log.Printf("%v", r)
-//}

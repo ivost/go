@@ -1,0 +1,6 @@
+
+# BDD
+go get -u github.com/smartystreets/goconvey
+
+# postgres driver
+go get -u github.com/lib/pq
