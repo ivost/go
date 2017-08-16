@@ -1,22 +1,26 @@
 <component name="libraryTable">
   <library name="GOPATH &lt;awesomeProject&gt;">
     <CLASSES>
-      <root url="file://$USER_HOME$/github/go/src/datagen" />
-      <root url="file://$USER_HOME$/github/go/src/tstrigger" />
-      <root url="file://$USER_HOME$/github/go/src/github.com" />
-      <root url="file://$USER_HOME$/github/go/src/readxml" />
-      <root url="file://$USER_HOME$/github/go/src/client" />
-      <root url="file://$USER_HOME$/github/go/src/pluralsight" />
-      <root url="file://$USER_HOME$/github/go/src/rest" />
+      <root url="file://$PROJECT_DIR$/../datagen" />
+      <root url="file://$PROJECT_DIR$/../tstrigger" />
+      <root url="file://$PROJECT_DIR$/../github.com" />
+      <root url="file://$PROJECT_DIR$/../readxml" />
+      <root url="file://$PROJECT_DIR$/../client" />
+      <root url="file://$PROJECT_DIR$/../pluralsight" />
+      <root url="file://$PROJECT_DIR$/../server" />
+      <root url="file://$PROJECT_DIR$/../Mastering-Go-Programming-master" />
+      <root url="file://$PROJECT_DIR$/../rest" />
     </CLASSES>
     <SOURCES>
-      <root url="file://$USER_HOME$/github/go/src/datagen" />
-      <root url="file://$USER_HOME$/github/go/src/tstrigger" />
-      <root url="file://$USER_HOME$/github/go/src/github.com" />
-      <root url="file://$USER_HOME$/github/go/src/readxml" />
-      <root url="file://$USER_HOME$/github/go/src/client" />
-      <root url="file://$USER_HOME$/github/go/src/pluralsight" />
-      <root url="file://$USER_HOME$/github/go/src/rest" />
+      <root url="file://$PROJECT_DIR$/../datagen" />
+      <root url="file://$PROJECT_DIR$/../tstrigger" />
+      <root url="file://$PROJECT_DIR$/../github.com" />
+      <root url="file://$PROJECT_DIR$/../readxml" />
+      <root url="file://$PROJECT_DIR$/../client" />
+      <root url="file://$PROJECT_DIR$/../pluralsight" />
+      <root url="file://$PROJECT_DIR$/../server" />
+      <root url="file://$PROJECT_DIR$/../Mastering-Go-Programming-master" />
+      <root url="file://$PROJECT_DIR$/../rest" />
     </SOURCES>
     <excluded>
       <root url="file://$PROJECT_DIR$" />

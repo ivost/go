@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-func main() {
+func main2() {
 
 	//fmt.Println(<- waitAndSend(42, 2))
 	select {

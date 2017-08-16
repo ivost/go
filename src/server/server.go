@@ -15,10 +15,20 @@ func init() {
 	flag.Parse()
 }
 
+/*
+
+ab -c200 -t10 -k  http://localhost:8081/
+
+Requests per second:    20153.52 [#/sec] (mean)
+
+*/
+
+
 func main() {
 	http.HandleFunc("/", root)
 	http.HandleFunc("/login", login)
 	http.HandleFunc("/upload", store.Upload)
+	log.Printf("server listens on 8081");
 	log.Fatal(http.ListenAndServe(":8081", nil))
 }
 
