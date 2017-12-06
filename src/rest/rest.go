@@ -40,6 +40,8 @@ func makeResp() ([]byte, error) {
 }
 
 func main() {
+	var url = "localhost:8282"
+	fmt.Printf("I am listening on http://%v/\n", url)
 	http.HandleFunc("/", serve)
-	http.ListenAndServe("localhost:8282", nil)
+	http.ListenAndServe(url, nil)
 }
