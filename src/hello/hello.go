@@ -2,6 +2,8 @@ package main
 
 /*
   #include <stdlib.h>
+  #include <event2/event.h>
+  #cgo LDFLAGS: -levent
  */
 import "C"
 import (
@@ -12,6 +14,8 @@ import (
 		)
 
 // testing cgo
+// https://blog.gopheracademy.com/advent-2015/libc-hooking-go-shared-libraries/
+// https://github.com/golang/go/blob/master/misc/cgo/testshared/shared_test.go#L416
 
 func main() {
 	const key = "FOO"
@@ -39,5 +43,8 @@ func main() {
   	if vs != val {
   		fmt.Printf("getenv() = %q; want %q\n", vs, val)
   	}
+
+  	v = C.event_get_version()
+  	fmt.Printf("libevent version: %q\n", C.GoString(v))
 
 }
