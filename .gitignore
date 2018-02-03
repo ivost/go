@@ -20,11 +20,9 @@ vendor
 debug
 golang.org
 golang
-
-
 gorilla
 hashicorp
-#gopkg.in
+gopkg.in
 pkg
 
 https://github.com/spf13/cobra
