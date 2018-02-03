@@ -18,33 +18,31 @@ import (
 	"fmt"
 
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
 // versionCmd represents the version command
 var versionCmd = &cobra.Command{
 	Use:   "version",
-	Short: "A brief description of your command",
+	Short: "display package version",
 	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+and usage of using your command`,
 	Run: func(cmd *cobra.Command, args []string) {
+		VERSION := "1.0"
 		fmt.Println("version called")
+		if viper.GetBool("own") {
+			fmt.Printf("sonic version %v\n", VERSION)
+		}
 	},
 }
 
 func init() {
 	rootCmd.AddCommand(versionCmd)
-
-	// Here you will define your flags and configuration settings.
-
 	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
+	// and all subcommands
 	// versionCmd.PersistentFlags().String("foo", "", "A help for foo")
-
 	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// versionCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	// is called directly
+	versionCmd.Flags().BoolP("own", "t", false, "sonic version")
+	viper.BindPFlag("own", versionCmd.Flags().Lookup("own"))
 }
