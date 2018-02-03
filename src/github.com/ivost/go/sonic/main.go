@@ -14,7 +14,7 @@
 
 package main
 
-import "github.com/ivost/golang/sonic/cmd"
+import "github.com/ivost/go/sonic/cmd"
 
 func main() {
 	cmd.Execute()
