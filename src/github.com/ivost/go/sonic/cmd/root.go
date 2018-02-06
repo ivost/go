@@ -20,7 +20,7 @@ var rootCmd = &cobra.Command{
 	// has an action associated with it:
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Print("root run")
-		cmd.runme()
+		runme()
 	},
 }
 
