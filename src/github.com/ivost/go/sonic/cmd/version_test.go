@@ -1,11 +1,16 @@
 package cmd
 
 import (
+	"encoding/json"
 	"io/ioutil"
 	"os"
 	"path/filepath"
 	"testing"
+
+	. "github.com/smartystreets/goconvey/convey"
 )
+
+// 	go test -v to see output
 
 // Just start of the package.json - we neet the version
 type NpmPackage struct {
@@ -14,18 +19,28 @@ type NpmPackage struct {
 	Version string `json:"version"`
 }
 
-// TestMain is main test
 func TestVersion(t *testing.T) {
+	expected := "1.1.11"
+	// Only pass t into top-level Convey calls
+	Convey("Given some npm package json", t, func() {
+		Convey("Obtain version", func() {
+			var pkg NpmPackage
+			_ = json.Unmarshal([]byte(readNpmPackage(t)), &pkg)
+			Convey("The value should be "+expected, func() {
+				So(pkg.Version, ShouldEqual, expected)
+			})
+		})
+	})
+}
+
+func readNpmPackage(t *testing.T) string {
 	ok := true
 	dir, err := os.Getwd()
-	//dir, err := filepath.Abs(filepath.Dir(os.Args[0]))
 	if err != nil {
 		t.Fatal(err)
 	}
-	// need -v to see output
-	t.Logf("Current dir %q\n", dir)
+	// this assumes particular level (cmd in our case)
 	s := filepath.Join(dir, "../internal/testdata/package.json")
-	t.Logf("path %q\n", s)
 	ok, s, err = getFile(s)
 	if err != nil {
 		t.Fatal(err)
@@ -33,56 +48,21 @@ func TestVersion(t *testing.T) {
 	if !ok {
 		t.Fatalf("File %v not found\n", s)
 	}
-	t.Logf("file %q\n", s)
+	return s
 }
 
-// func NewTestCase(t *testing.T, dir, name string) {
-// 	rootPath := filepath.FromSlash(filepath.Join(dir, name))
-// 	fmt.Print(rootPath)
-// n := &TestCase{
-// 	t:           t,
-// 	name:        name,
-// 	rootPath:    rootPath,
-// 	initialPath: filepath.Join(rootPath, "initial"),
-// 	finalPath:   filepath.Join(rootPath, "final"),
-// }
-// j, err := ioutil.ReadFile(filepath.Join(rootPath, "testcase.json"))
-// if err != nil {
-// 	t.Fatal(err)
-// }
-// err = json.Unmarshal(j, n)
-// if err != nil {
-// 	t.Fatal(err)
-// }
-// return n
-//}
-
-// // InitialPath represents the initial set of files in a project.
-// func (tc *TestCase) InitialPath() string {
-// 	return tc.initialPath
-// }
-
-// func (tc *TestCase) CompareFile(goldenPath, working string) {
-// 	golden := filepath.Join(tc.finalPath, goldenPath)
-
-// 	gotExists, got, err := getFile(working)
+// recursively search for given target - e.g. testdata
+// go up to the parent until limited number of levels
+// func findTestdata(target string) (bool, string) {
+// 	_, err := os.Stat(path)
 // 	if err != nil {
-// 		tc.t.Fatalf("Error reading project file %q: %s", goldenPath, err)
+// 		return false, "", nil
 // 	}
-// 	wantExists, want, err := getFile(golden)
+// 	f, err := ioutil.ReadFile(path)
 // 	if err != nil {
-// 		tc.t.Fatalf("Error reading testcase file %q: %s", goldenPath, err)
+// 		return true, "", err
 // 	}
-
-// 	if wantExists && gotExists {
-// 		if want != got {
-// 			tc.t.Errorf("%s was not as expected\n(WNT):\n%s\n(GOT):\n%s", filepath.Base(goldenPath), want, got)
-// 		}
-// 	} else if !wantExists && gotExists {
-// 		tc.t.Errorf("%q created where none was expected", goldenPath)
-// 	} else if wantExists && !gotExists {
-// 		tc.t.Errorf("%q not created where one was expected", goldenPath)
-// 	}
+// 	return true, string(f), nil
 // }
 
 func getFile(path string) (bool, string, error) {
