@@ -15,7 +15,9 @@
 package cmd
 
 import (
+	"encoding/json"
 	"fmt"
+	"io/ioutil"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -32,7 +34,11 @@ and usage of using your command`,
 		fmt.Println("version called")
 		if viper.GetBool("own") {
 			fmt.Printf("sonic version %v\n", VERSION)
+			return
 		}
+		var pkg NpmPackage
+		path := ""
+		_ = readNpmPackage(path, &pkg)
 	},
 }
 
@@ -45,4 +51,20 @@ func init() {
 	// is called directly
 	versionCmd.Flags().BoolP("own", "t", false, "sonic version")
 	viper.BindPFlag("own", versionCmd.Flags().Lookup("own"))
+}
+
+// Just start of the package.json - we neet the version
+type NpmPackage struct {
+	Name    string `json:"name"`
+	Desc    string `json:"description"`
+	Version string `json:"version"`
+}
+
+func readNpmPackage(path string, pkg *NpmPackage) bool {
+	f, err := ioutil.ReadFile(path)
+	if err != nil {
+		return false
+	}
+	err = json.Unmarshal([]byte(string(f)), &pkg)
+	return err == nil
 }
