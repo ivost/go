@@ -8,16 +8,52 @@ import (
 	"strings"
 	"bytes"
 	"os"
+	"bufio"
 )
 
 func main() {
-	test3()
+	//deflate()
+	inflate()
 }
 
-func test3() {
-	var out bytes.Buffer
+func deflate() {
+	var stderr bytes.Buffer
+	fname := "test.json"
+	fp, err := os.Open(fname)
+	check(err)
+	defer fp.Close()
+	fq, err := os.Create(fname+".zst")
+	check(err)
+	defer fq.Close()
 
-	fp := os.Open("test.json")
+	cmd := exec.Command("zstd", "-f")
+	r := bufio.NewReader(fp)
+	cmd.Stdin = r
+	w := bufio.NewWriter(fq)
+	cmd.Stdout = w
+	check(cmd.Run())
+	w.Flush()
+	fmt.Printf("stderr: %v\n", stderr.String())
+}
+
+func inflate() {
+	var stderr bytes.Buffer
+	fname := "test.json"
+	fp, err := os.Open(fname+".zst")
+	defer fp.Close()
+	check(err)
+	fq, err := os.Create("1"+fname)
+	check(err)
+	defer fp.Close()
+	cmd := exec.Command("zstd", "-f", "-d")
+	r := bufio.NewReader(fp)
+	cmd.Stdin = r
+	w := bufio.NewWriter(fq)
+	cmd.Stdout = w
+	cmd.Stderr = &stderr
+	check(cmd.Run())
+	w.Flush()
+	fmt.Printf("stderr: %v\n", stderr.String())
 }
 
 func test1() {
