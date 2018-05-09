@@ -17,9 +17,9 @@ var   registries = []string{"http://localhost:8081"}
 const group = "G1"
 
 // schema name aka subject
-const schemaName = "test"
-
-const topicName = "test"
+const schemaName = "S2"
+// it looks like topic should match schema name
+const topicName = schemaName
 
 var codec      *goavro.Codec
 var err error
@@ -38,20 +38,22 @@ type TestObject struct {
 var testObj *TestObject
 
 func init() {
-	codec, err = goavro.NewCodec(`
+	codec, err = goavro.NewCodec(fmt.Sprintf(`
         {
           "type": "record",
-          "name": "test",
+          "name": "%s",
           "fields" : [
-            {"name": "val", "type": "int", "default": 0}
+            {"name": "val", "type": "int"},
+            {"name": "count", "type": "int"},
+            {"name": "foo", "type": "string", "default": "bar"}
           ]
-        }`)
+        }`, schemaName))
 	checkError(err)
-	testObj = makeTestObject("test", 1)
+	testObj = makeTestObject(schemaName)
 }
 
 func main() {
-	//registry()
+	registry()
 	//go produce()
 	produce()
 	consume()
@@ -63,12 +65,13 @@ func produce() {
 	defer prod.Close()
 	for i := 0; i < 10; i++ {
 		key := []byte("key")
-		val := fmt.Sprintf("{\"val\":%d}",i)
+		// foo has default value - can be omitted
+		val := fmt.Sprintf(`{"val":%d, "count":%d}`, i, i)
 		err = prod.Add(topicName, testObj.Codec.Schema(), key, []byte(val))
 		checkError(err)
 		log.Printf("message %v sent OK", i)
 		// artificial delay - just for testing
-		// side effect - some strange things with rebalance - to investigate
+		// side effect? - some strange things with rebalance - to investigate
 		//time.Sleep(10 * time.Millisecond)
 	}
 }
@@ -77,7 +80,7 @@ func consume() {
 
 	callbacks := &kafka.ConsumerCallbacks{
 		OnDataReceived:func(m kafka.Message) {
-			log.Printf("message received: %v", string(m.Value))
+			log.Printf("message received: schemaId: %v, key: %v, value: %v, offset: %v", m.SchemaId, string(m.Key), string(m.Value), m.Offset)
 		},
 		OnError:func(err error) {
 			log.Printf("error: %v", err.Error())
@@ -89,14 +92,15 @@ func consume() {
 
 	cons, err := kafka.NewAvroConsumer(brokers, registries, schemaName, group, *callbacks)
 	checkError(err)
-	// this will block - callbacks will trigger
+	// this will block - events will trigger callbacks
+	log.Printf("before consume")
 	cons.Consume()
 	log.Printf("after consume")
 }
 
 
 func registry() {
-	log.Println("registry 1.0 start...")
+	log.Println("registry 1.1 start...")
 	r := kafka.NewSchemaRegistryClientWithRetries(registries, 2)
 	subjects, err := r.GetSubjects()
 	checkError(err)
@@ -149,10 +153,14 @@ func checkError(err error) {
 	}
 }
 
-func makeTestObject(subject string, id int) *TestObject {
+var count = 1
+
+func makeTestObject(subject string) *TestObject {
 	obj := &TestObject{}
-	obj.Subject = subject
-	obj.Id = id
 	obj.Codec = codec
+	obj.Id = count + count
+	obj.Subject = subject
+	obj.Count = count
+	count ++
 	return obj
 }
