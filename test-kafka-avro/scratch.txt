@@ -1,0 +1,11 @@
+	codec, err = goavro.NewCodec(`
+        {
+          "type": "record",
+          "name": "` + schemaName + `",
+          "fields" : [
+            {"name": "Id", "type": "int"},
+            {"name": "FirstName", "type": "string", "default": "John"},
+            {"name": "LastName", "type": "string", "default": "Doe"},
+            {"name": "Age", "type": "int"}
+          ]
+        }`)
