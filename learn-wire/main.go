@@ -1,7 +1,10 @@
 package main
 
-import "log"
-
 func main() {
-	log.Printf("Hello")
+	message := NewMessage()
+	greeter := NewGreeter(message)
+	event := NewEvent(greeter)
+	event.Start()
 }
+
+
