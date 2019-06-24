@@ -2,12 +2,11 @@ package main
 
 import "log"
 
+/*
+go run main.go greeter.go event.go message.go wire_gen.go
+ */
+
 func main() {
-
-	//message := NewMessage()
-	//greeter := NewGreeter(message)
-	//event := NewEvent(greeter)
-
 	event, err := InitializeEvent()
 	if err != nil {
 		log.Fatal(err)
