@@ -27,14 +27,14 @@ func main1() {
 	fmt.Println(x)
 	fmt.Println(y)
 
-	go func(n int) { fmt.Printf("anonym gosub called with arg %v\n", n)} (42)
+	go func(n int) { fmt.Printf("anonym gosub called with arg %v\n", n) }(42)
 
 	// channel
 	ch := make(chan bool)
-	fmt.Println(Compare(2, 2));
-	fmt.Println(Compare(40, 2));
+	fmt.Println(Compare(2, 2))
+	fmt.Println(Compare(40, 2))
 	go gosub1(ch)
-	ret := <- ch
+	ret := <-ch
 	fmt.Printf("ret of gosub1 %t\n", ret)
 
 	time.Sleep(1000 * time.Millisecond)
