@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="12922dd6-3bbe-4446-b8e7-92dd3c62484d" name="Default" comment="mqtt try" />
+    <list default="true" id="12922dd6-3bbe-4446-b8e7-92dd3c62484d" name="Default" comment="mqtt try">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/go.sum" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/psutil.go" beforeDir="false" afterPath="$PROJECT_DIR$/psutil.go" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -53,7 +58,7 @@
       <recent name="$PROJECT_DIR$" />
     </key>
   </component>
-  <component name="RunManager" selected="Go Test.TestMqttPubSub in awesomeProject (1)">
+  <component name="RunManager" selected="Go Build.go build awesomeProject">
     <configuration default="true" type="GoRunFileConfiguration" factoryName="Go Single File">
       <module name="awesomeProject" />
       <working_directory value="$PROJECT_DIR$/" />
@@ -162,10 +167,10 @@
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Go Build.go build awesomeProject" />
         <item itemvalue="Go Test.TestMqttPubSub in awesomeProject (1)" />
         <item itemvalue="Go Test.mqtt_test.go" />
         <item itemvalue="Go Test.TestMqttPubSub in awesomeProject" />
-        <item itemvalue="Go Build.go build awesomeProject" />
         <item itemvalue="Go Build.go build hello.go" />
       </list>
     </recent_temporary>
@@ -189,22 +194,22 @@
       <screen x="0" y="23" width="1344" height="817" />
     </state>
     <state x="211" y="23" key="CommitChangelistDialog2/0.23.1344.817@0.23.1344.817" timestamp="1599349917548" />
-    <state width="1254" height="254" key="GridCell.Tab.0.bottom" timestamp="1599349995576">
+    <state width="1254" height="262" key="GridCell.Tab.0.bottom" timestamp="1599426030951">
       <screen x="0" y="23" width="1344" height="817" />
     </state>
-    <state width="1254" height="254" key="GridCell.Tab.0.bottom/0.23.1344.817@0.23.1344.817" timestamp="1599349995576" />
-    <state width="1254" height="254" key="GridCell.Tab.0.center" timestamp="1599349995576">
+    <state width="1254" height="262" key="GridCell.Tab.0.bottom/0.23.1344.817@0.23.1344.817" timestamp="1599426030951" />
+    <state width="1254" height="262" key="GridCell.Tab.0.center" timestamp="1599426030950">
       <screen x="0" y="23" width="1344" height="817" />
     </state>
-    <state width="1254" height="254" key="GridCell.Tab.0.center/0.23.1344.817@0.23.1344.817" timestamp="1599349995576" />
-    <state width="1254" height="254" key="GridCell.Tab.0.left" timestamp="1599349995576">
+    <state width="1254" height="262" key="GridCell.Tab.0.center/0.23.1344.817@0.23.1344.817" timestamp="1599426030950" />
+    <state width="1254" height="262" key="GridCell.Tab.0.left" timestamp="1599426030950">
       <screen x="0" y="23" width="1344" height="817" />
     </state>
-    <state width="1254" height="254" key="GridCell.Tab.0.left/0.23.1344.817@0.23.1344.817" timestamp="1599349995576" />
-    <state width="1254" height="254" key="GridCell.Tab.0.right" timestamp="1599349995576">
+    <state width="1254" height="262" key="GridCell.Tab.0.left/0.23.1344.817@0.23.1344.817" timestamp="1599426030949" />
+    <state width="1254" height="262" key="GridCell.Tab.0.right" timestamp="1599426030950">
       <screen x="0" y="23" width="1344" height="817" />
     </state>
-    <state width="1254" height="254" key="GridCell.Tab.0.right/0.23.1344.817@0.23.1344.817" timestamp="1599349995576" />
+    <state width="1254" height="262" key="GridCell.Tab.0.right/0.23.1344.817@0.23.1344.817" timestamp="1599426030950" />
     <state width="1254" height="254" key="GridCell.Tab.1.bottom" timestamp="1599349995577">
       <screen x="0" y="23" width="1344" height="817" />
     </state>
