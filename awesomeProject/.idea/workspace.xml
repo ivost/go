@@ -2,10 +2,14 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="12922dd6-3bbe-4446-b8e7-92dd3c62484d" name="Default" comment="mqtt try">
+      <change afterPath="$PROJECT_DIR$/../psu/psu" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/go.sum" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/psutil.go" beforeDir="false" afterPath="$PROJECT_DIR$/psutil.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/psutil.go" beforeDir="false" afterPath="$PROJECT_DIR$/chart.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../psu/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/../psu/go.mod" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../psu/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/../psu/go.sum" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../psu/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/../psu/main.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -42,6 +46,7 @@
     <option name="showMembers" value="true" />
   </component>
   <component name="PropertiesComponent">
+    <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
     <property name="DefaultGoTemplateProperty" value="Go File" />
     <property name="GO_FMT" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
@@ -183,6 +188,7 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
+    <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
     <MESSAGE value="mqtt try" />
     <option name="LAST_COMMIT_MESSAGE" value="mqtt try" />
   </component>
@@ -194,22 +200,22 @@
       <screen x="0" y="23" width="1344" height="817" />
     </state>
     <state x="211" y="23" key="CommitChangelistDialog2/0.23.1344.817@0.23.1344.817" timestamp="1599349917548" />
-    <state width="1254" height="262" key="GridCell.Tab.0.bottom" timestamp="1599426030951">
+    <state width="1254" height="262" key="GridCell.Tab.0.bottom" timestamp="1599430947245">
       <screen x="0" y="23" width="1344" height="817" />
     </state>
-    <state width="1254" height="262" key="GridCell.Tab.0.bottom/0.23.1344.817@0.23.1344.817" timestamp="1599426030951" />
-    <state width="1254" height="262" key="GridCell.Tab.0.center" timestamp="1599426030950">
+    <state width="1254" height="262" key="GridCell.Tab.0.bottom/0.23.1344.817@0.23.1344.817" timestamp="1599430947245" />
+    <state width="1254" height="262" key="GridCell.Tab.0.center" timestamp="1599430947244">
       <screen x="0" y="23" width="1344" height="817" />
     </state>
-    <state width="1254" height="262" key="GridCell.Tab.0.center/0.23.1344.817@0.23.1344.817" timestamp="1599426030950" />
-    <state width="1254" height="262" key="GridCell.Tab.0.left" timestamp="1599426030950">
+    <state width="1254" height="262" key="GridCell.Tab.0.center/0.23.1344.817@0.23.1344.817" timestamp="1599430947244" />
+    <state width="1254" height="262" key="GridCell.Tab.0.left" timestamp="1599430947243">
       <screen x="0" y="23" width="1344" height="817" />
     </state>
-    <state width="1254" height="262" key="GridCell.Tab.0.left/0.23.1344.817@0.23.1344.817" timestamp="1599426030949" />
-    <state width="1254" height="262" key="GridCell.Tab.0.right" timestamp="1599426030950">
+    <state width="1254" height="262" key="GridCell.Tab.0.left/0.23.1344.817@0.23.1344.817" timestamp="1599430947243" />
+    <state width="1254" height="262" key="GridCell.Tab.0.right" timestamp="1599430947244">
       <screen x="0" y="23" width="1344" height="817" />
     </state>
-    <state width="1254" height="262" key="GridCell.Tab.0.right/0.23.1344.817@0.23.1344.817" timestamp="1599426030950" />
+    <state width="1254" height="262" key="GridCell.Tab.0.right/0.23.1344.817@0.23.1344.817" timestamp="1599430947244" />
     <state width="1254" height="254" key="GridCell.Tab.1.bottom" timestamp="1599349995577">
       <screen x="0" y="23" width="1344" height="817" />
     </state>
