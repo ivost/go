@@ -1,19 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="12922dd6-3bbe-4446-b8e7-92dd3c62484d" name="Default" comment="">
-      <change afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/go.sum" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/mqtt_test.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../mqt/mqt.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/awesomeProject.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/awesomeProject.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/GOPATH__awesomeProject_.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/binsearch.go" beforeDir="false" afterPath="$PROJECT_DIR$/binsearch.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/hello.go" beforeDir="false" afterPath="$PROJECT_DIR$/hello.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/maps.go" beforeDir="false" afterPath="$PROJECT_DIR$/maps.go" afterDir="false" />
-    </list>
+    <list default="true" id="12922dd6-3bbe-4446-b8e7-92dd3c62484d" name="Default" comment="mqtt try" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -50,6 +38,7 @@
   </component>
   <component name="PropertiesComponent">
     <property name="DefaultGoTemplateProperty" value="Go File" />
+    <property name="GO_FMT" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="configurable.Global.GOPATH.is.expanded" value="true" />
     <property name="configurable.Module.GOPATH.is.expanded" value="false" />
@@ -64,7 +53,7 @@
       <recent name="$PROJECT_DIR$" />
     </key>
   </component>
-  <component name="RunManager" selected="Go Test.mqtt_test.go">
+  <component name="RunManager" selected="Go Test.TestMqttPubSub in awesomeProject (1)">
     <configuration default="true" type="GoRunFileConfiguration" factoryName="Go Single File">
       <module name="awesomeProject" />
       <working_directory value="$PROJECT_DIR$/" />
@@ -128,6 +117,15 @@
       <package value="awesomeProject" />
       <method v="2" />
     </configuration>
+    <configuration name="TestMqttPubSub in awesomeProject (1)" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+      <module name="awesomeProject" />
+      <working_directory value="$PROJECT_DIR$" />
+      <framework value="gotest" />
+      <kind value="PACKAGE" />
+      <package value="awesomeProject" />
+      <pattern value="^\QTestMqttPubSub\E$" />
+      <method v="2" />
+    </configuration>
     <configuration name="TestMqttPubSub in awesomeProject" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
       <module name="awesomeProject" />
       <working_directory value="$PROJECT_DIR$" />
@@ -146,15 +144,6 @@
       <package value="awesomeProject" />
       <method v="2" />
     </configuration>
-    <configuration name="binsearch_test.go" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
-      <module name="awesomeProject" />
-      <working_directory value="$PROJECT_DIR$" />
-      <framework value="gotest" />
-      <kind value="FILE" />
-      <package value="awesomeProject" />
-      <filePath value="$PROJECT_DIR$/binsearch_test.go" />
-      <method v="2" />
-    </configuration>
     <configuration name="mqtt_test.go" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
       <module name="awesomeProject" />
       <working_directory value="$PROJECT_DIR$" />
@@ -165,19 +154,19 @@
       <method v="2" />
     </configuration>
     <list>
-      <item itemvalue="Go Test.binsearch_test.go" />
       <item itemvalue="Go Build.go build hello.go" />
       <item itemvalue="Go Build.go build awesomeProject" />
       <item itemvalue="Go Test.TestMqttPubSub in awesomeProject" />
       <item itemvalue="Go Test.mqtt_test.go" />
+      <item itemvalue="Go Test.TestMqttPubSub in awesomeProject (1)" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Go Test.TestMqttPubSub in awesomeProject (1)" />
         <item itemvalue="Go Test.mqtt_test.go" />
         <item itemvalue="Go Test.TestMqttPubSub in awesomeProject" />
         <item itemvalue="Go Build.go build awesomeProject" />
         <item itemvalue="Go Build.go build hello.go" />
-        <item itemvalue="Go Test.binsearch_test.go" />
       </list>
     </recent_temporary>
   </component>
@@ -188,26 +177,50 @@
   <component name="VcsContentAnnotationSettings">
     <option name="myLimit" value="2678400000" />
   </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="mqtt try" />
+    <option name="LAST_COMMIT_MESSAGE" value="mqtt try" />
+  </component>
   <component name="VgoProject">
     <integration-enabled>true</integration-enabled>
   </component>
   <component name="WindowStateProjectService">
-    <state width="1132" height="130" key="GridCell.Tab.0.bottom" timestamp="1599349584662">
+    <state x="211" y="23" key="CommitChangelistDialog2" timestamp="1599349917548">
       <screen x="0" y="23" width="1344" height="817" />
     </state>
-    <state width="1132" height="130" key="GridCell.Tab.0.bottom/0.23.1344.817@0.23.1344.817" timestamp="1599349584662" />
-    <state width="1132" height="130" key="GridCell.Tab.0.center" timestamp="1599349584661">
+    <state x="211" y="23" key="CommitChangelistDialog2/0.23.1344.817@0.23.1344.817" timestamp="1599349917548" />
+    <state width="1254" height="254" key="GridCell.Tab.0.bottom" timestamp="1599349995576">
       <screen x="0" y="23" width="1344" height="817" />
     </state>
-    <state width="1132" height="130" key="GridCell.Tab.0.center/0.23.1344.817@0.23.1344.817" timestamp="1599349584661" />
-    <state width="1132" height="130" key="GridCell.Tab.0.left" timestamp="1599349584661">
+    <state width="1254" height="254" key="GridCell.Tab.0.bottom/0.23.1344.817@0.23.1344.817" timestamp="1599349995576" />
+    <state width="1254" height="254" key="GridCell.Tab.0.center" timestamp="1599349995576">
       <screen x="0" y="23" width="1344" height="817" />
     </state>
-    <state width="1132" height="130" key="GridCell.Tab.0.left/0.23.1344.817@0.23.1344.817" timestamp="1599349584661" />
-    <state width="1132" height="130" key="GridCell.Tab.0.right" timestamp="1599349584662">
+    <state width="1254" height="254" key="GridCell.Tab.0.center/0.23.1344.817@0.23.1344.817" timestamp="1599349995576" />
+    <state width="1254" height="254" key="GridCell.Tab.0.left" timestamp="1599349995576">
       <screen x="0" y="23" width="1344" height="817" />
     </state>
-    <state width="1132" height="130" key="GridCell.Tab.0.right/0.23.1344.817@0.23.1344.817" timestamp="1599349584662" />
+    <state width="1254" height="254" key="GridCell.Tab.0.left/0.23.1344.817@0.23.1344.817" timestamp="1599349995576" />
+    <state width="1254" height="254" key="GridCell.Tab.0.right" timestamp="1599349995576">
+      <screen x="0" y="23" width="1344" height="817" />
+    </state>
+    <state width="1254" height="254" key="GridCell.Tab.0.right/0.23.1344.817@0.23.1344.817" timestamp="1599349995576" />
+    <state width="1254" height="254" key="GridCell.Tab.1.bottom" timestamp="1599349995577">
+      <screen x="0" y="23" width="1344" height="817" />
+    </state>
+    <state width="1254" height="254" key="GridCell.Tab.1.bottom/0.23.1344.817@0.23.1344.817" timestamp="1599349995577" />
+    <state width="1254" height="254" key="GridCell.Tab.1.center" timestamp="1599349995577">
+      <screen x="0" y="23" width="1344" height="817" />
+    </state>
+    <state width="1254" height="254" key="GridCell.Tab.1.center/0.23.1344.817@0.23.1344.817" timestamp="1599349995577" />
+    <state width="1254" height="254" key="GridCell.Tab.1.left" timestamp="1599349995576">
+      <screen x="0" y="23" width="1344" height="817" />
+    </state>
+    <state width="1254" height="254" key="GridCell.Tab.1.left/0.23.1344.817@0.23.1344.817" timestamp="1599349995576" />
+    <state width="1254" height="254" key="GridCell.Tab.1.right" timestamp="1599349995577">
+      <screen x="0" y="23" width="1344" height="817" />
+    </state>
+    <state width="1254" height="254" key="GridCell.Tab.1.right/0.23.1344.817@0.23.1344.817" timestamp="1599349995577" />
     <state x="78" y="23" key="SettingsEditor" timestamp="1599348876921">
       <screen x="0" y="23" width="1344" height="817" />
     </state>
